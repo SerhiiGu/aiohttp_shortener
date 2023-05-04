@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+  web:
+    build: .
+    restart: unless-stopped
+    command: python main.py
+    ports:
+      - '8080:8080'
+    environment:
+      DB_HOST: postgres
+    hostname: web
+
+  bot:
+    build: .
+    restart: unless-stopped
+    command: python tg_bot.py
+    environment:
+      DB_HOST: postgres
+      WEB_HOST:
+    hostname: bot
+
+  postgres:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: qwe123
+    ports:
+      - "5432:5432"
+    hostname: postgres
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.admin
+      PGADMIN_DEFAULT_PASSWORD: qwe123
+    ports:
+      - "7002:80"
+    depends_on:
+      - postgres
+    hostname: pgadmin
