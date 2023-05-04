@@ -22,7 +22,7 @@ async def send_welcome(message: types.Message):
     await message.reply("Hi!\n A'm links shortener!")
 
 
-@dp.message_handler(commands=['my_links'])
+@dp.message_handler(commands=['my_links', 'get_my_links'])
 async def my_links(message: types.Message):
     links = await get_user_links(message.from_user.id)
     await message.reply('\n'.join(links))

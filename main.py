@@ -49,4 +49,4 @@ if __name__ == '__main__':
     app.add_routes([web.get('/{new_link}', redirect_handler)])
     if sys.version_info >= (3, 8) and sys.platform.lower().startswith("win"):
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    web.run_app(app, host="127.0.0.1")
+    web.run_app(app, host="0.0.0.0", port=8080)
