@@ -10,7 +10,7 @@ import aiohttp_jinja2
 import jinja2
 from aiohttp import web
 
-from db_utils import insert_data, get_link
+from db_utils import insert_data, get_link, create_table
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 warnings.filterwarnings("ignore", category=ResourceWarning)
@@ -19,6 +19,11 @@ warnings.filterwarnings("ignore", category=ResourceWarning)
 @aiohttp_jinja2.template('main_page.html')
 async def home(request):
     return {}
+
+
+async def init(request):
+    await create_table()
+    return web.Response(text='Table init done')
 
 
 async def make_link(request):
@@ -44,6 +49,7 @@ if __name__ == '__main__':
     aiohttp_jinja2.setup(
         app, loader=jinja2.FileSystemLoader(os.path.join(os.getcwd(), "templates"))
     )
+    app.add_routes([web.get('/init', init)])
     app.add_routes([web.get('/', home)])
     app.add_routes([web.post('/', make_link)])
     app.add_routes([web.get('/{new_link}', redirect_handler)])

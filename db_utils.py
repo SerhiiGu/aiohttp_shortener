@@ -4,6 +4,7 @@ import warnings
 
 from aiopg.sa import create_engine
 import sqlalchemy as sa
+from sqlalchemy.schema import CreateTable
 
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
@@ -11,7 +12,7 @@ warnings.filterwarnings("ignore", category=ResourceWarning)
 
 metadata = sa.MetaData()
 tbl = sa.Table(
-    'tbl', metadata,
+    'links', metadata,
     sa.Column('id', sa.Integer, primary_key=True, autoincrement=True),
     sa.Column('new_link', sa.String(255)),
     sa.Column('old_link', sa.String(255)),
@@ -26,6 +27,13 @@ async def connect_db():
                                  port=5432,
                                  database='postgres')
     return engine
+
+
+async def create_table():
+    engine = await connect_db()
+    async with engine.acquire() as conn:
+        create_tbl = CreateTable(tbl)
+        await conn.execute(create_tbl)
 
 
 async def insert_data(old_link, new_link, user=None):
